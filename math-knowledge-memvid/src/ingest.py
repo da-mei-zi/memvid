@@ -109,8 +109,8 @@ def _extract_text_file(path: Path) -> list[tuple[int, str]]:
 # ---------------------------------------------------------------------------
 
 _SUBJECT_PATTERNS: list[tuple[re.Pattern[str], str]] = [
-    (re.compile(r"riemannian|黎曼", re.IGNORECASE), "Riemannian Geometry"),
-    (re.compile(r"ricci|riemann|geodesic|测地", re.IGNORECASE), "Riemannian Geometry"),
+    (re.compile(r"riemannian|黎曼|geodesic|测地|riemann\b", re.IGNORECASE), "Riemannian Geometry"),
+    (re.compile(r"\bricci\b", re.IGNORECASE), "Riemannian Geometry"),
     (re.compile(r"pde|partial differential|偏微分", re.IGNORECASE), "PDE"),
     (re.compile(r"harmonic|调和", re.IGNORECASE), "Harmonic Analysis"),
     (re.compile(r"topology|拓扑", re.IGNORECASE), "Topology"),

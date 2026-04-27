@@ -47,6 +47,12 @@ from config import MEMVID_CLI, MEMORY_FILE, SEARCH_SNIPPET_CHARS, SEARCH_TOP_K
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
+# Short common words that carry little search signal.
+_QUERY_STOP_WORDS: frozenset[str] = frozenset({
+    "the", "a", "an", "is", "are", "in", "of", "to", "and", "for",
+    "what", "how", "why", "does", "有", "什么", "的", "在", "是",
+})
+
 # ---------------------------------------------------------------------------
 # Low-level CLI wrapper
 # ---------------------------------------------------------------------------
@@ -101,10 +107,8 @@ def _cli_search(
         return raw
 
     # Fall back: search each significant term individually and merge by RRF.
-    # Filter out very short stop-word-like tokens.
-    _STOP = {"the", "a", "an", "is", "are", "in", "of", "to", "and", "for",
-             "what", "how", "why", "does", "有", "什么", "的", "在", "是"}
-    terms = [t for t in query.split() if len(t) >= 3 and t.lower() not in _STOP]
+    # Filter out very short tokens and common stop words.
+    terms = [t for t in query.split() if len(t) >= 3 and t.lower() not in _QUERY_STOP_WORDS]
     if not terms:
         return raw
 

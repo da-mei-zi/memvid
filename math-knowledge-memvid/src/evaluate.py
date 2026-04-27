@@ -180,7 +180,7 @@ def evaluate(
             t0 = time.perf_counter()
             try:
                 res = search(question_text, mode=mode, top_k=top_k, mv2_path=mv2_path)
-            except Exception as exc:  # noqa: BLE001
+            except (RuntimeError, FileNotFoundError, OSError) as exc:
                 logger.error("Search failed for q=%s mode=%s: %s", qid, mode, exc)
                 continue
             latency = (time.perf_counter() - t0) * 1000

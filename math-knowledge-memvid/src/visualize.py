@@ -89,7 +89,15 @@ def _load_metrics(metrics_csv: Path) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 
-def plot_topic_distribution(chunks: list[dict], out_dir: Path) -> Path:
+_CHART_COLORS = ["#4C72B0", "#55A868", "#C44E52", "#8172B2", "#CCB974", "#64B5CD"]
+
+
+def _chart_colors(n: int) -> list[str]:
+    """Return *n* distinct chart colors, cycling if necessary."""
+    return [_CHART_COLORS[i % len(_CHART_COLORS)] for i in range(n)]
+
+
+(chunks: list[dict], out_dir: Path) -> Path:
     """Bar chart: number of chunks per topic label."""
     plt = _get_plt()
 
@@ -141,9 +149,9 @@ def plot_topk_hit_rate(metrics: list[dict], out_dir: Path) -> Path:
     width = 0.25
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.bar(x - width, hit1, width, label="Top-1", color="#4C72B0")
-    ax.bar(x, hit3, width, label="Top-3", color="#55A868")
-    ax.bar(x + width, hit5, width, label="Top-5", color="#C44E52")
+    ax.bar(x - width, hit1, width, label="Top-1", color=_CHART_COLORS[0])
+    ax.bar(x, hit3, width, label="Top-3", color=_CHART_COLORS[1])
+    ax.bar(x + width, hit5, width, label="Top-5", color=_CHART_COLORS[2])
 
     ax.set_ylabel("Hit Rate", fontsize=11)
     ax.set_title("Retrieval Hit Rate by Search Mode", fontsize=13)
@@ -176,7 +184,7 @@ def plot_mrr_comparison(metrics: list[dict], out_dir: Path) -> Path:
     mrrs = [float(m.get("mrr", 0)) for m in metrics]
 
     fig, ax = plt.subplots(figsize=(6, 4))
-    bars = ax.bar(modes, mrrs, color=["#4C72B0", "#55A868", "#C44E52"][:len(modes)],
+    bars = ax.bar(modes, mrrs, color=_chart_colors(len(modes)),
                   edgecolor="white", width=0.4)
     ax.bar_label(bars, labels=[f"{v:.4f}" for v in mrrs], padding=3, fontsize=10)
     ax.set_ylabel("MRR", fontsize=11)
@@ -204,7 +212,7 @@ def plot_latency_comparison(metrics: list[dict], out_dir: Path) -> Path:
     latencies = [float(m.get("avg_latency_ms", 0)) for m in metrics]
 
     fig, ax = plt.subplots(figsize=(6, 4))
-    bars = ax.bar(modes, latencies, color=["#4C72B0", "#55A868", "#C44E52"][:len(modes)],
+    bars = ax.bar(modes, latencies, color=_chart_colors(len(modes)),
                   edgecolor="white", width=0.4)
     ax.bar_label(bars, labels=[f"{v:.1f} ms" for v in latencies], padding=3, fontsize=10)
     ax.set_ylabel("Average Latency (ms)", fontsize=11)

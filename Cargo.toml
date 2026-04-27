@@ -154,6 +154,10 @@ required-features = ["api_embed"]
 name = "simd_benchmark"
 required-features = ["simd"]
 
+[[bin]]
+name = "memvid-cli"
+path = "src/bin/memvid_cli.rs"
+
 [[bench]]
 name = "search_precision_benchmark"
 harness = false
